@@ -50,7 +50,7 @@
         <div class="collapse navbar-collapse" id="collapsibleNavId">
             <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
                 <li class="nav-item active">
-                    <a class="nav-link" href="#">Dashboard</a>
+                <a class="nav-link" href="{{url('admin/dashboard/post')}}">Dashboard</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/create">Content</a>

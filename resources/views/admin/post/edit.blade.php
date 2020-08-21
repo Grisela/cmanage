@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
                 
-                <form action="{{ route('post.update', $post->id)}}" method="POST">
+                <form action="{{ route('post.update', $post->id)}}" method="POST" enctype="multipart/form-data">
                   @method('PATCH')
                   @csrf
                     <div class="form-group">
@@ -15,6 +15,9 @@
                     <div class="form-group">
                       <label for="body"></label>
                     <textarea class="form-control" name="body" id="body" rows="3" >{{$post->body}}</textarea>
+                    </div>
+                    <div class="form-group">
+                      <input type="file" class="form-control-file" name="post_image">
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>

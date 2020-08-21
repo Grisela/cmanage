@@ -19,12 +19,12 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('admin/dashboard', 'HomeController@isAdmin')->name('admin.content.index')->middleware('adminCheck');
+// Route::get('admin/dashboard', 'HomeController@isAdmin')->name('admin.content.index')->middleware('adminCheck');
 
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/create', 'HomeController@contentCreate')->name('create')->middleware('adminCheck');
 
-Route::resource('post', 'postController')->middleware('adminCheck');
+Route::resource('admin/dashboard/post', 'postController')->middleware('adminCheck');
 
 

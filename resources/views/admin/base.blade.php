@@ -21,8 +21,9 @@
 </head>
 <body>
     <div id="app">
+        
         @include('admin.inc.nav')
-
+        @include('admin.inc.message')
         <main class="py-4">
             @yield('admincontent')
         </main>

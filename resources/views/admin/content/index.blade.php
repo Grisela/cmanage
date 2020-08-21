@@ -13,13 +13,16 @@
                                 <div class="card">
                                     <div class="row">
                                         <div class="col-md-8">
-                                        <h3><a href="/post/{{ $eachpost->id }}">{{ $eachpost->title }}</a></h3>
+                                        <h3><a href="{{url('/admin/dashboard/post/'.$eachpost->id)}}">{{ $eachpost->title }}</a></h3>
                                         <small>posted by : {{ $eachpost->user->name }}</small>
                                         </div>
                                     </div>
                                 </div>
                             @endforeach
+                        @else
+                                <h5 align='center'>no post yet</h5>
                         @endif
+
                 </div>
             </div>
         </div>

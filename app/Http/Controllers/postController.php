@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Post;
 use Auth;
 
@@ -40,7 +41,18 @@ class postController extends Controller
         $request->validate([
             'title'=>'required',
             'body'=>'required',
+            'post_image' => 'image|nullable|max:1999',
         ]);
+
+        if($request->hasFile('post_image')){
+            $fileNameWithExt = $request->file('post_image')->getClientOriginalName();
+            $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+            $extension = $request->file('post_image')->getClientOriginalExtension();
+            $fileNameToStore = $fileName.'.'.time().'.'.$extension;
+            $path = $request->file('post_image')->storeAs('public/post_image', $fileNameToStore);
+        }else{
+            $fileNameToStore = 'noimage.jpg';
+        }
         
         $post = new Post([
             'title' => $request->get('title'),
@@ -48,9 +60,10 @@ class postController extends Controller
         ]);
 
         $post->user_id = auth()->user()->id;
+        $post->post_image = $fileNameToStore;
         $post->save();
 
-        return redirect('/post')->with('Success', "Post Created");
+        return redirect('admin/dashboard/post/')->with('Success', "Post Created");
     }
 
     /**
@@ -90,14 +103,28 @@ class postController extends Controller
             'title'=>'required',
             'body'=>'required',
         ]);
+
+        if($request->hasFile('post_image')){
+            $fileNameWithExt = $request->file('post_image')->getClientOriginalName();
+            $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+            $extension = $request->file('post_image')->getClientOriginalExtension();
+            $fileNameToStore = $fileName.'.'.time().'.'.$extension;
+            $path = $request->file('post_image')->storeAs('public/post_image', $fileNameToStore);
+        }
         
         $post = Post::find($id);
         $post->title = $request->get('title');
         $post->body = $request->get('body');
+        if($request->hasFile('post_image')){
+            if($post->post_image != 'noimage.jpg') {
+                Storage::delete('public/post_image/' . $post->post_image);
+            }
+            $post->post_image = $fileNameToStore;
+        }
 
         $post->save();
 
-        return redirect('/post')->with('Success', "Post Updated");
+        return redirect('admin/dashboard/post/')->with('Success', "Post Updated");
     }
 
     /**
@@ -109,8 +136,13 @@ class postController extends Controller
     public function destroy($id)
     {
         $post = Post::find($id);
+
+        if($post->post_image != 'noimage.jpg'){
+            Storage::delete('public/post_image/'.$post->post_image);
+        }
+
         $post->delete();
 
-        return redirect('/post')->with('Success', "Post has been deleted");
+        return redirect('admin/dashboard/post/')->with('Success', "Post has been deleted");
     }
 }
