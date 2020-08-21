@@ -30,4 +30,9 @@ class HomeController extends Controller
     {
         return view('admin.content.index');
     }
+
+    public function contentCreate()
+    {
+        return view('admin.post.create');
+    }
 }
