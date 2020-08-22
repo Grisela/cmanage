@@ -49,9 +49,9 @@ class LoginController extends Controller
         if(auth()->attempt(array('email' => $input['email'], 'password' => $input['password'])))
         {
             if (auth()->user()->rolecheck == 1) {
-                return redirect()->route('admin.content.index');
+                return redirect('admin/dashboard/post');
             }else{
-                return redirect()->route('home');
+                return redirect('home');
             }
         }else{
             return redirect()->route('login')
