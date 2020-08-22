@@ -27,4 +27,6 @@ Route::get('/create', 'HomeController@contentCreate')->name('create')->middlewar
 
 Route::resource('admin/dashboard/post', 'postController')->middleware('adminCheck');
 
+Route::post('/post/comment', 'CommentController@store')->name('comments.store');
+
 
