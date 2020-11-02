@@ -3,6 +3,11 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
+
+        <header>
+            <img class="img-fluid" src="https://images.unsplash.com/photo-1604269696351-a8b021ecc4f8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=890&q=80" alt="background">
+        </header>
+
         <div class="col-md-8">
             <div class="card">
 
