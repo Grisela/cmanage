@@ -9,7 +9,7 @@
         </header>
 
         <div class="col-md-8">
-            <div class="card">
+            <div class="card card-up">
 
                 <div class="card-body">
                         @if (count($post)>0)

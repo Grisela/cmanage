@@ -10,7 +10,7 @@ header {
     background-color: rgb(224, 224, 224);
 }
 
-.card{
+.card-up{
     margin-top: -20vh;
 }
 
@@ -29,4 +29,17 @@ header {
 .bod{
     font-style: italic;
     text-align: center;
+}
+
+.custom-card{
+    padding: 5%;
+    margin-top: -5vh;
+    border: 1px solid white;
+    border-radius: 5px;
+    background-color: white;
+    box-shadow: 3px 3px #c7c7c7;
+}
+
+.none{
+    display: none;
 }
