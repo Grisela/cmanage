@@ -20,6 +20,6 @@ class roleCheckAdmin
             return $next($request);
         }
 
-        return redirect('home')->with('error', 'Access Denied');
+        return redirect('/home')->with('error', 'Access Denied');
     }
 }

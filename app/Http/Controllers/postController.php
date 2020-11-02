@@ -17,7 +17,9 @@ class postController extends Controller
     public function index()
     {
         $post = Post::latest()->paginate(10);
-        return view('admin.content.index')->with('post', $post);
+
+        // return view('admin.content.index')->with('post', $post);
+        return view('layouts.content.index')->with('post', $post);
     }
 
     /**
@@ -38,32 +40,38 @@ class postController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'title'=>'required',
-            'body'=>'required',
-            'post_image' => 'image|nullable|max:1999',
-        ]);
-
-        if($request->hasFile('post_image')){
-            $fileNameWithExt = $request->file('post_image')->getClientOriginalName();
-            $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
-            $extension = $request->file('post_image')->getClientOriginalExtension();
-            $fileNameToStore = $fileName.'.'.time().'.'.$extension;
-            $path = $request->file('post_image')->storeAs('public/post_image', $fileNameToStore);
-        }else{
-            $fileNameToStore = 'noimage.jpg';
-        }
+        if(!Auth::guest()){
+            if(auth()->user()->rolecheck == 1){
+                $request->validate([
+                    'title'=>'required',
+                    'body'=>'required',
+                    'post_image' => 'image|nullable|max:1999',
+                ]);
         
-        $post = new Post([
-            'title' => $request->get('title'),
-            'body' => $request->get('body'),
-        ]);
-
-        $post->user_id = auth()->user()->id;
-        $post->post_image = $fileNameToStore;
-        $post->save();
-
-        return redirect('admin/dashboard/post/')->with('Success', "Post Created");
+                if($request->hasFile('post_image')){
+                    $fileNameWithExt = $request->file('post_image')->getClientOriginalName();
+                    $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+                    $extension = $request->file('post_image')->getClientOriginalExtension();
+                    $fileNameToStore = $fileName.'.'.time().'.'.$extension;
+                    $path = $request->file('post_image')->storeAs('public/post_image', $fileNameToStore);
+                }else{
+                    $fileNameToStore = 'noimage.jpg';
+                }
+                
+                $post = new Post([
+                    'title' => $request->get('title'),
+                    'body' => $request->get('body'),
+                ]);
+        
+                $post->user_id = auth()->user()->id;
+                $post->post_image = $fileNameToStore;
+                $post->save();
+        
+                return redirect('home/')->with('Success', "Post Created");
+            }
+            return redirect('home/')->with('error', "Forbidden");
+        }
+        return redirect('home/')->with('error', "Forbidden");
     }
 
     /**
@@ -75,7 +83,7 @@ class postController extends Controller
     public function show($id)
     {
         $post = Post::find($id);
-        return view('admin.post.show')->with('post', $post); 
+        return view('layouts.post.show')->with('post', $post); 
     }
 
     /**
@@ -86,8 +94,14 @@ class postController extends Controller
      */
     public function edit($id)
     {
-       $post = Post::find($id);
-       return view('admin.post.edit')->with('post', $post);
+        if(!Auth::guest()){
+            if(auth()->user()->rolecheck == 1){
+                $post = Post::find($id);
+                return view('admin.post.edit')->with('post', $post);
+            }
+            return redirect('/home')->with('error', 'forbidden');
+        }
+        return redirect('/home')->with('error', 'forbidden');
     }
 
     /**
@@ -99,32 +113,38 @@ class postController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'title'=>'required',
-            'body'=>'required',
-        ]);
-
-        if($request->hasFile('post_image')){
-            $fileNameWithExt = $request->file('post_image')->getClientOriginalName();
-            $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
-            $extension = $request->file('post_image')->getClientOriginalExtension();
-            $fileNameToStore = $fileName.'.'.time().'.'.$extension;
-            $path = $request->file('post_image')->storeAs('public/post_image', $fileNameToStore);
-        }
+        if(!Auth::guest()){
+            if(auth()->user()->rolecheck == 1){
+                $request->validate([
+                    'title'=>'required',
+                    'body'=>'required',
+                ]);
         
-        $post = Post::find($id);
-        $post->title = $request->get('title');
-        $post->body = $request->get('body');
-        if($request->hasFile('post_image')){
-            if($post->post_image != 'noimage.jpg') {
-                Storage::delete('public/post_image/' . $post->post_image);
+                if($request->hasFile('post_image')){
+                    $fileNameWithExt = $request->file('post_image')->getClientOriginalName();
+                    $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+                    $extension = $request->file('post_image')->getClientOriginalExtension();
+                    $fileNameToStore = $fileName.'.'.time().'.'.$extension;
+                    $path = $request->file('post_image')->storeAs('public/post_image', $fileNameToStore);
+                }
+                
+                $post = Post::find($id);
+                $post->title = $request->get('title');
+                $post->body = $request->get('body');
+                if($request->hasFile('post_image')){
+                    if($post->post_image != 'noimage.jpg') {
+                        Storage::delete('public/post_image/' . $post->post_image);
+                    }
+                    $post->post_image = $fileNameToStore;
+                }
+        
+                $post->save();
+        
+                return redirect('home/')->with('Success', "Post Updated");
             }
-            $post->post_image = $fileNameToStore;
+            return redirect('/home')->with('error', "forbidden");
         }
-
-        $post->save();
-
-        return redirect('admin/dashboard/post/')->with('Success', "Post Updated");
+        return redirect('/home')->with('error', "forbidden");
     }
 
     /**
@@ -135,14 +155,20 @@ class postController extends Controller
      */
     public function destroy($id)
     {
-        $post = Post::find($id);
-
-        if($post->post_image != 'noimage.jpg'){
-            Storage::delete('public/post_image/'.$post->post_image);
+        if(!Auth::guest()){
+            if(auth()->user()->rolecheck == 1){
+                $post = Post::find($id);
+    
+            if($post->post_image != 'noimage.jpg'){
+                Storage::delete('public/post_image/'.$post->post_image);
+            }
+    
+            $post->delete();
+    
+            return redirect('home/')->with('Success', "Post has been deleted");
+            }
+            return redirect('home/')->with('error', "forbidden");
         }
-
-        $post->delete();
-
-        return redirect('admin/dashboard/post/')->with('Success', "Post has been deleted");
+        return redirect('home/')->with('error', "forbidden");
     }
 }

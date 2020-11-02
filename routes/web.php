@@ -14,18 +14,22 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/home');
 });
 
 Auth::routes();
 
 // Route::get('admin/dashboard/', 'HomeController@isAdmin')->name('admin.content.index')->middleware('adminCheck');
 
-Route::get('/home', 'HomeController@index')->name('home');
+// Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/create', 'HomeController@contentCreate')->name('create')->middleware('adminCheck');
 
-Route::resource('admin/dashboard/post', 'postController')->middleware('adminCheck');
+// Route::resource('admin/dashboard/post', 'postController')->middleware('adminCheck');
+Route::resource('/home', 'postController');
+
+// Route::get('home/{id}/edit')->middleware('adminCheck');
+// Route::get('/home', 'postController@index');
 
 Route::post('/post/comment', 'CommentController@store')->name('comments.store');
 

@@ -1,13 +1,11 @@
-@extends('admin.base')
+@extends('layouts.app')
 
-@section('admincontent')
+@section('content')
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">{{ __('Dashboard') }}</div>
-
-            <h1>{{$data}}</h1>
 
                 <div class="card-body">
                         @if (count($post)>0)
@@ -17,6 +15,8 @@
                                         <div class="col-md-8">
                                         <h3><a href="{{url('home/'.$eachpost->id)}}">{{ $eachpost->title }}</a></h3>
                                         <small>posted by : {{ $eachpost->user->name }}</small>
+                                        
+                                        <small>comment : {{ $commentCount = DB::table('comments')->where('post_id', '=', $eachpost->id)->count() }}</small>
                                         </div>
                                     </div>
                                 </div>
