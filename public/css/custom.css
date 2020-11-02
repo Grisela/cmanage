@@ -1,0 +1,32 @@
+header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: row wrap;
+    
+}
+
+#app{
+    background-color: rgb(224, 224, 224);
+}
+
+.card{
+    margin-top: -20vh;
+}
+
+.main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: column wrap;
+}
+
+.c-text{
+    color: gray;
+    margin-top: 5vh;
+}
+
+.bod{
+    font-style: italic;
+    text-align: center;
+}
